@@ -23,7 +23,7 @@ export const App = () => {
 	const [isChanging, setIsChanging] = useState(false);
 	const [refreshTodosFlag, setRefreshTodosFlag] = useState(false);
 	const [filter, setFilter] = useState('');
-	const [filteredTodos, setFilteredTodos] = useState([]);
+	const [filteredTodos, setFilteredTodos] = useState({});
 	const [idForChange, setIdForChange] = useState(null);
 
 	const refreshTodos = () => setRefreshTodosFlag(!refreshTodosFlag);
