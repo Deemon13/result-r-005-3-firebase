@@ -1,27 +1,23 @@
-import { URL } from '../constants';
+import { ref, set } from 'firebase/database';
+import { db } from '../firebase';
 
-export const useChangeTodo = (id, refreshTodos, setFilter, setIsChanging) => {
+export const useChangeTodo = (id, setFilter, setIsChanging) => {
 	const submitChanges = event => {
 		event.preventDefault();
 
 		const form = event.currentTarget;
 		const newTitle = form.elements.changeTodo.value;
 
-		fetch(URL + `/${id}`, {
-			method: 'PUT',
-			headers: { 'Content-Type': 'application/json;charset=utf-8' },
-			body: JSON.stringify({
-				userId: 1,
-				completed: false,
-				title: newTitle,
-			}),
-		})
-			.then(rawResponse => rawResponse.json())
-			.then(() => {
-				refreshTodos();
-				setFilter('');
-				setIsChanging(false);
-			});
+		const todosDbRef = ref(db, `todos/${id}`);
+
+		set(todosDbRef, {
+			userId: 1,
+			title: newTitle,
+			completed: false,
+		}).then(() => {
+			setFilter('');
+			setIsChanging(false);
+		});
 	};
 
 	return {

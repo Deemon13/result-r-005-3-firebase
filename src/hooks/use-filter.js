@@ -5,10 +5,13 @@ import { debounce } from 'lodash';
 export const useFilter = (todos, filter, setFilteredTodos, setFilter) => {
 	useEffect(() => {
 		const filteredTodos = !filter
-			? todos
-			: todos.filter(item =>
-					item.title.toLowerCase().includes(filter.toLowerCase()),
-			  );
+			? Object.entries(todos)
+			: Object.entries(todos).filter(item => {
+					console.log(item[1].title);
+					item[1].title.toLowerCase().includes(filter.toLowerCase());
+			  });
+
+		console.log(filteredTodos);
 		setFilteredTodos(filteredTodos);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filter]);

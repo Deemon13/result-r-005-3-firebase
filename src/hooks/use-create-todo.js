@@ -1,8 +1,8 @@
 import { useState } from 'react';
+import { ref, push } from 'firebase/database';
+import { db } from '../firebase';
 
-import { URL } from '../constants';
-
-export const useCreateTodo = refreshTodos => {
+export const useCreateTodo = () => {
 	const [isCreating, setIsCreating] = useState(false);
 
 	const createTodo = event => {
@@ -11,22 +11,17 @@ export const useCreateTodo = refreshTodos => {
 
 		const form = event.currentTarget;
 		const todoTitle = form.elements.todo.value;
-		fetch(URL, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json; charset=utf-8' },
-			body: JSON.stringify({
-				userId: 1,
-				title: todoTitle,
-				completed: false,
-			}),
-		})
-			.then(rawResponse => rawResponse.json())
-			.then(() => {
-				refreshTodos();
-			})
-			.finally(() => {
-				setIsCreating(false);
-			});
+
+		const todosDbRef = ref(db, 'todos');
+
+		push(todosDbRef, {
+			userId: 1,
+			title: todoTitle,
+			completed: false,
+		}).then(() => {
+			setIsCreating(false);
+		});
+
 		form.reset();
 	};
 

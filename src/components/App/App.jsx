@@ -28,7 +28,7 @@ export const App = () => {
 
 	const refreshTodos = () => setRefreshTodosFlag(!refreshTodosFlag);
 
-	const { todos, isLoading } = useGetTodos(refreshTodosFlag);
+	const { todos, isLoading } = useGetTodos();
 	const { isCreating, createTodo } = useCreateTodo(refreshTodos);
 	const { isDeleting, deleteTodo } = useDeleteTodo(refreshTodos, setFilter);
 	const { submitChanges } = useChangeTodo(
@@ -57,20 +57,23 @@ export const App = () => {
 				{isLoading ? (
 					<Loader />
 				) : (
-					(filter ? filteredTodos : sortBy ? sortedTodos : todos).map(
-						({ id, userId, title, completed }) => (
-							<TodoItem
-								key={id}
-								userId={userId}
-								title={title}
-								completed={completed}
-								onClick={deleteTodo}
-								changeTodo={requestTochangeTodo}
-								id={id}
-								deleting={isDeleting}
-							/>
-						),
-					)
+					(filter
+						? Object.entries(filteredTodos)
+						: sortBy
+						? Object.entries(sortedTodos)
+						: Object.entries(todos)
+					).map(([id, { userId, title, completed }]) => (
+						<TodoItem
+							key={id}
+							userId={userId}
+							title={title}
+							completed={completed}
+							onClick={deleteTodo}
+							changeTodo={requestTochangeTodo}
+							id={id}
+							deleting={isDeleting}
+						/>
+					))
 				)}
 			</div>
 			{isChanging && <TodoChanger onSubmit={submitChanges} title="Меняем!" />}
